@@ -1,0 +1,8 @@
+train: M:\Uni_Siegen\Sem-5\SA\Studienarbeit\Work\Training_Offline\Training_Colored_Images\train\images
+val: M:\Uni_Siegen\Sem-5\SA\Studienarbeit\Work\Training_Offline\Training_Colored_Images\valid\images
+test: M:\Uni_Siegen\Sem-5\SA\Studienarbeit\Work\Training_Offline\Training_Colored_Images\test\images
+
+nc: 1
+names: ['Carton']
+
+
