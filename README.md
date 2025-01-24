@@ -8,18 +8,18 @@ This Package uses a RealSense Camera to detect cartons for MASON to pick up.
 ## Structure
 
 1. It starts a RealSense node, which provides the camera frames.
-2. It runs a 2D Object Detector (YOLO-Backbone) to detect Cartons in the color Frame. 2D Bounding Boxes are outputted.
+2. It runs a 2D Object Detector (YOLO-Backbone) to detect Cartons in the colour Frame. 2D Bounding Boxes are outputted.
 3. A `BoundingBox` Object is created.
 4. These Bounding Boxes are then Filtered. Due to the low Precision, color filtering needs to applied to filter out the Boxes relevant for MASON.
 5. If the Bounding Box is valid, it is appended to the `BoundingBoxManager`. The `BoundingBox` contains a method to create a `Detection` msg.
-6. The `BoundingBoxManager` contains methods for visualization and ROS communication via the `DetectionList` msg.
+6. The `BoundingBoxManager` contains visualization and ROS communication methods via the `DetectionList` msg.
 7. The `DetectorNode` runs the OD in an infinite loop. The `DetectionList` is published under /detections/.
 
-## Detailed explanaition
+## Detailed explanation
 
 ### `DetectorNode`
 
-Subscribes to the Camera and Depth Frame of the RealSense Node. It runs the `Detector` infinitely and publishes its messages under `/detections/`. 
+Subscribes to the RealSense Node's Camera and Depth Frame. It runs the `Detector` infinitely and publishes its messages under `/detections/`. 
 
 ### `scripts/detector_module/`
 
@@ -29,20 +29,20 @@ A Python module that contains all code necessary for the `DetectorNode`.
 
 | Class         | Description |
 | :---         | --- |
-| `BoundingBox` | Computes the relevant infos of the 2D and, with the Depth Frame, 3D Bounding Box. It performs a PCA to obtain the orientation. The Size is only valid if the Orientation angles (especially the `yaw`) is zero, since the 3D Bounding Box is built by getting the min/max values fromnthe depth frame snippet of the Bounding Box. |
-| `BoundingBoxManager` | While running, the `BoundingBoxManager` fills its List of Detections. Note, that it uses a static List of Detections to avoid continuous memory allocations. The Length of the preallocated List can be changed in the `config` with `max_detections`. The classes main purpose is to publish the Detection List. |
+| `BoundingBox` | Computes the relevant infos of the 2D and, with the Depth Frame, 3D Bounding Box. It performs a PCA to obtain the orientation. The Size is only valid if the Orientation angles (especially the `yaw`) are zero since the 3D Bounding Box is built by getting the min/max values from the depth frame snippet of the Bounding Box. |
+| `BoundingBoxManager` | While running, the `BoundingBoxManager` fills its List of Detections. It uses a static List of Detections to avoid continuous memory allocations. The Length of the preallocated List can be changed in the `config` with `max_detections`. The class's main purpose is to publish the Detection List. |
 |`Detector`| The main module. It runs the `YOLO` model and creates `BoundingBoxes`. It then appends the detections to the `BoundingBoxManager`. This `BoundingBoxmanager` is then returned in the call.
 
 #### models
 
-Contains the pretrained YOLO models.
+Contains the pre-trained YOLO models.
 
 #### runtime_setup
 
 | file   | Description    |
 |---------|----------------|
 | `setup_model.py` | Sets the filters by checking `config["filters"]` for the filters ordered and then importing them from `runtime_setup/filters/` with the defined parameters. It then returns a list of callable filters.|
-| `setup_logging.py` | **CURRENTLY UNUSED**. Sets up the logging configurations. Although Video Logging is available, it isn´t used in the node due to the infinite process horizon of the node and therefore the risk of flushing the size of the PC. |
+| `setup_logging.py` | **CURRENTLY UNUSED**. Sets up the logging configurations. Although Video Logging is available, it isn´t used in the node due to the infinite process horizon of the node and, therefore, the risk of flushing the size of the PC. |
 
 
 #### config
